@@ -6,7 +6,7 @@ public class QuantityLength {
     private final double value;
     private final LengthUnit unit;
 
-    private QuantityLength(double value, LengthUnit unit){
+    public QuantityLength(double value, LengthUnit unit){
 
         if (unit==null) throw new IllegalArgumentException("Unit must not be null");
         this.value = value;
