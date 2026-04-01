@@ -3,6 +3,8 @@ package com.quantity.measurment.model;
 import com.quantity.measurment.enums.LengthUnit;
 
 public class QuantityLength {
+
+    private final double EPSILON = 1e-6;
     private final double value;
     private final LengthUnit unit;
 
@@ -26,7 +28,7 @@ public class QuantityLength {
         double thisInFeet = this.unit.toFeet(this.value);
         double otherInFeet = that.unit.toFeet(that.value);
 
-        return Double.compare(thisInFeet, otherInFeet) == 0;
+        return Math.abs(thisInFeet - otherInFeet) < EPSILON;
 
     }
 }
