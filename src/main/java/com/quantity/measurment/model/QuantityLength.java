@@ -10,7 +10,7 @@ public class QuantityLength {
 
     public QuantityLength(double value, LengthUnit unit){
 
-        if (unit==null) throw new IllegalArgumentException("Unit must not be null");
+        if (unit==null) throw new IllegalArgumentException("Unit should not be null");
         this.value = value;
         this.unit = unit;
     }
