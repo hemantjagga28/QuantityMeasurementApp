@@ -65,6 +65,25 @@ public class QuantityLength {
         return targetUnit.fromFeet(valueInFeet);
     }
 
+    public QuantityLength add(QuantityLength other) {
+        if (other == null) {
+            throw new IllegalArgumentException();
+        }
+        if(!Double.isFinite(this.value)) {
+            throw new IllegalArgumentException();
+        }
+        double thisInFeet = this.unit.toFeet(this.value);
+        double otherInFeet = other.unit.toFeet(other.getValue());
+
+        double SumInFeet = thisInFeet + otherInFeet;
+        double result = this.unit.fromFeet(SumInFeet);
+        return new QuantityLength(result, this.unit);
+    }
+
+    public static QuantityLength add(QuantityLength q1, QuantityLength q2) {
+        return q1.add(q2);
+    }
+
     // Equality check with tolerance comparison
     @Override
     public boolean equals(Object obj) {
