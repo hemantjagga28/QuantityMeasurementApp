@@ -1,106 +1,84 @@
-package com.quantity.measurment.model;
+package com.quantity.measurement.model;
 
-import com.quantity.measurment.enums.LengthUnit;
+import com.quantity.measurement.enums.LengthUnit;
 
 public class QuantityLength {
 
-    private static final double EPSILON = 1e-6;
-
     private final double value;
     private final LengthUnit unit;
+    private static final double EPSILON = 1e-6;
 
-    // Constructor
     public QuantityLength(double value, LengthUnit unit) {
-
-        if (unit == null) {
-            throw new IllegalArgumentException("Unit should not be null");
+        if (unit == null || !Double.isFinite(value)) {
+            throw new IllegalArgumentException("Invalid input");
         }
-
-        if (!Double.isFinite(value)) {
-            throw new IllegalArgumentException("Invalid numeric value!");
-        }
-
         this.value = value;
         this.unit = unit;
     }
 
-    // Getter for value
     public double getValue() {
         return value;
     }
 
-    // Getter for unit
     public LengthUnit getUnit() {
         return unit;
     }
 
-    // Instance method → returns converted numeric value
-    public double toConvert(LengthUnit targetUnit) {
-        return convert(this.value, targetUnit, this.unit);
-    }
-
-    // Instance method → returns converted QuantityLength object
-    public QuantityLength convert(LengthUnit targetUnit) {
-
-        double convertedValue = convert(this.value, targetUnit, this.unit);
-
-        return new QuantityLength(convertedValue, targetUnit);
-    }
-
-    // Static conversion logic
-    public static double convert(double value,
-                                 LengthUnit targetUnit,
-                                 LengthUnit sourceUnit) {
-
-        if (sourceUnit == null || targetUnit == null) {
-            throw new IllegalArgumentException("Unit should not be null");
-        }
-
-        if (!Double.isFinite(value)) {
-            throw new IllegalArgumentException("Invalid numeric value!");
-        }
-
-        double valueInFeet = sourceUnit.toFeet(value);
-
-        return targetUnit.fromFeet(valueInFeet);
-    }
-
+    // ================= UC6 METHOD =================
+    // Default → result in first operand unit
     public QuantityLength add(QuantityLength other) {
-        if (other == null) {
-            throw new IllegalArgumentException();
-        }
-        if(!Double.isFinite(this.value)) {
-            throw new IllegalArgumentException();
-        }
-        double thisInFeet = this.unit.toFeet(this.value);
-        double otherInFeet = other.unit.toFeet(other.getValue());
-
-        double SumInFeet = thisInFeet + otherInFeet;
-        double result = this.unit.fromFeet(SumInFeet);
-        return new QuantityLength(result, this.unit);
+        return add(this, other, this.unit);
     }
 
-    public static QuantityLength add(QuantityLength q1, QuantityLength q2) {
-        return q1.add(q2);
+    // ================= UC7 METHOD =================
+    // Explicit target unit
+    public static QuantityLength add(QuantityLength q1,
+                                     QuantityLength q2,
+                                     LengthUnit targetUnit) {
+
+        if (q1 == null || q2 == null || targetUnit == null) {
+            throw new IllegalArgumentException("Null input");
+        }
+
+        if (!Double.isFinite(q1.value) || !Double.isFinite(q2.value)) {
+            throw new IllegalArgumentException("Invalid number");
+        }
+
+        return addHelper(q1, q2, targetUnit);
     }
 
-    // Equality check with tolerance comparison
+    // ================= DRY PRIVATE METHOD =================
+    private static QuantityLength addHelper(QuantityLength q1,
+                                            QuantityLength q2,
+                                            LengthUnit targetUnit) {
+
+        // Convert to base (feet)
+        double base1 = q1.unit.toBase(q1.value);
+        double base2 = q2.unit.toBase(q2.value);
+
+        // Add
+        double sumBase = base1 + base2;
+
+        // Convert to target
+        double result = targetUnit.fromBase(sumBase);
+
+        // Round to 2 decimal places
+        result = Math.round(result * 100.0) / 100.0;
+
+        return new QuantityLength(result, targetUnit);
+    }
+
+    // ================= EQUALS =================
     @Override
     public boolean equals(Object obj) {
-
-        if (this == obj) {
-            return true;
-        }
-
-        if (obj == null || getClass() != obj.getClass()) {
-            return false;
-        }
+        if (this == obj) return true;
+        if (!(obj instanceof QuantityLength)) return false;
 
         QuantityLength other = (QuantityLength) obj;
 
-        double thisInFeet = this.unit.toFeet(this.value);
-        double otherInFeet = other.unit.toFeet(other.value);
+        double base1 = this.unit.toBase(this.value);
+        double base2 = other.unit.toBase(other.value);
 
-        return Math.abs(thisInFeet - otherInFeet) < EPSILON;
+        return Math.abs(base1 - base2) < EPSILON;
     }
 }
