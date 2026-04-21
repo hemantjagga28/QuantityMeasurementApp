@@ -14,16 +14,20 @@ public enum LengthUnit {
     }
 
     public double convertToBaseUnit(double value) {
+
         if (!Double.isFinite(value)) {
             throw new IllegalArgumentException("Invalid value");
         }
+
         return value * toFeetFactor;
     }
 
     public double convertFromBaseUnit(double value) {
+
         if (!Double.isFinite(value)) {
             throw new IllegalArgumentException("Invalid value");
         }
+
         return value / toFeetFactor;
     }
 }
