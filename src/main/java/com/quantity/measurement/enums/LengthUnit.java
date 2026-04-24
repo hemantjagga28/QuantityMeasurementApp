@@ -35,4 +35,7 @@ public enum LengthUnit implements IMeasurable {
             throw new IllegalArgumentException("Invalid value");
         }
     }
+    public String getUnitName() {
+        return this.name();
+    }
 }
