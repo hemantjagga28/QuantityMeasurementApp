@@ -1,34 +1,39 @@
 package com.quantity.measurement.enums;
 
+import com.quantity.measurement.enums.IMeasurable;
+
 public enum VolumeUnit implements IMeasurable {
 
     LITRE(1.0),
     MILLILITRE(0.001),
     GALLON(3.78541);
 
-    private final double conversionFactor;
+    private final double toLitreFactor;
 
-    VolumeUnit(double conversionFactor) {
-        this.conversionFactor = conversionFactor;
+    VolumeUnit(double toLitreFactor) {
+        this.toLitreFactor = toLitreFactor;
     }
 
     @Override
     public double getConversionFactor() {
-        return conversionFactor;
+        return toLitreFactor;
     }
 
     @Override
     public double convertToBaseUnit(double value) {
-        return value * conversionFactor;
+        validate(value);
+        return value * toLitreFactor;
     }
 
     @Override
-    public double convertFromBaseUnit(double baseValue) {
-        return baseValue / conversionFactor;
+    public double convertFromBaseUnit(double value) {
+        validate(value);
+        return value / toLitreFactor;
     }
 
-    @Override
-    public String getUnitName() {
-        return this.name();
+    private void validate(double value) {
+        if (!Double.isFinite(value)) {
+            throw new IllegalArgumentException("Invalid value");
+        }
     }
 }

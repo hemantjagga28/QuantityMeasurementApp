@@ -105,11 +105,12 @@ public class Quantity<U extends IMeasurable> {
 
     public Quantity<U> add(Quantity<U> other, U targetUnit) {
         validate(other, targetUnit, true);
+        this.unit.validateOperationSupport("ADD");
 
         double resultBase = operate(other, ArithmeticOperation.ADD);
         double converted = targetUnit.convertFromBaseUnit(resultBase);
 
-        return new Quantity<>(round(converted), targetUnit);
+        return new Quantity<>(converted, targetUnit);
     }
 
     public Quantity<U> subtract(Quantity<U> other) {
@@ -118,18 +119,19 @@ public class Quantity<U extends IMeasurable> {
 
     public Quantity<U> subtract(Quantity<U> other, U targetUnit) {
         validate(other, targetUnit, true);
+        this.unit.validateOperationSupport("SUBTRACT");
 
         double resultBase = operate(other, ArithmeticOperation.SUBTRACT);
         double converted = targetUnit.convertFromBaseUnit(resultBase);
 
-        return new Quantity<>(round(converted), targetUnit);
+        return new Quantity<>(converted, targetUnit);
     }
 
     public double divide(Quantity<U> other) {
         validate(other, null, false);
+        this.unit.validateOperationSupport("DIVIDE");
         return operate(other, ArithmeticOperation.DIVIDE);
     }
-
     // ================= EQUALS / HASHCODE =================
 
     @Override
