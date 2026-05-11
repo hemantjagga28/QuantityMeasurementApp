@@ -1,34 +1,33 @@
-package com.quantity.measurement.enums;
+package com.quantity.measurement.enumsImpl;
 
 import com.quantity.measurement.enums.IMeasurable;
 
-public enum VolumeUnit implements IMeasurable {
+public enum WeightUnit implements IMeasurable {
 
-    LITRE(1.0),
-    MILLILITRE(0.001),
-    GALLON(3.78541);
+    KILOGRAM(1.0),
+    GRAM(0.001),
+    POUND(1.0 / 2.20462);//
+    private final double toKilogramFactor;
 
-    private final double toLitreFactor;
-
-    VolumeUnit(double toLitreFactor) {
-        this.toLitreFactor = toLitreFactor;
+    WeightUnit(double toKilogramFactor) {
+        this.toKilogramFactor = toKilogramFactor;
     }
 
     @Override
     public double getConversionFactor() {
-        return toLitreFactor;
+        return toKilogramFactor;
     }
 
     @Override
     public double convertToBaseUnit(double value) {
         validate(value);
-        return value * toLitreFactor;
+        return value * toKilogramFactor;
     }
 
     @Override
     public double convertFromBaseUnit(double value) {
         validate(value);
-        return value / toLitreFactor;
+        return value / toKilogramFactor;
     }
 
     private void validate(double value) {

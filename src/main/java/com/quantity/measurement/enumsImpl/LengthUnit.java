@@ -1,4 +1,6 @@
-package com.quantity.measurement.enums;
+package com.quantity.measurement.enumsImpl;
+
+import com.quantity.measurement.enums.IMeasurable;
 
 public enum LengthUnit implements IMeasurable {
 
@@ -34,8 +36,5 @@ public enum LengthUnit implements IMeasurable {
         if (!Double.isFinite(value)) {
             throw new IllegalArgumentException("Invalid value");
         }
-    }
-    public String getUnitName() {
-        return this.name();
     }
 }
